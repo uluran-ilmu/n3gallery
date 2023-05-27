@@ -3,6 +3,13 @@
  */
 package N3Gallery;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -21,7 +28,44 @@ public class App extends Application {
         primaryStage.show();
     }
 
+    private static boolean checkSQLiteDriver() {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            DriverManager.registerDriver(new org.sqlite.JDBC());
+            return true;
+        } catch (ClassNotFoundException | SQLException classNotFoundException) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not start SQLite Drivers");
+            return false;
+        }
+    }
+
+    private static Connection createConnection() {
+        Connection connection = null;
+
+        try {
+            connection = DriverManager
+                    .getConnection("jdbc:sqlite:" + App.class.getResource("/database/database.db").toExternalForm());
+        } catch (SQLException exception) {
+            Logger.getAnonymousLogger().log(Level.SEVERE,
+                    LocalDateTime.now() + ": Could not connect to SQLite DB");
+        } finally {
+            if (connection != null) {
+                return connection;
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
+        System.out.println(checkSQLiteDriver());
+
+        Connection connection = createConnection();
+
+        if (connection != null) {
+            Logger.getAnonymousLogger().log(Level.FINE,
+                    LocalDateTime.now() + "Connection to SQLite DB established");
+        }
+
         launch();
     }
 }
