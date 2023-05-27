@@ -5,6 +5,8 @@ package N3Gallery;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
@@ -62,9 +64,25 @@ public class App extends Application {
         Connection connection = createConnection();
 
         if (connection != null) {
-            Logger.getAnonymousLogger().log(Level.FINE,
-                    LocalDateTime.now() + "Connection to SQLite DB established");
+            System.out.println("Connection established to SQLite DB");
+
+            try {
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM users");
+                ResultSet rs = statement.executeQuery();
+                if (!rs.next()) {
+                    System.out.println("No data exist!");
+                }
+                
+                while (rs.next()) {
+                    System.out.println(rs.getString("name"));
+                }
+            } catch (SQLException e) {
+                Logger.getAnonymousLogger().log(
+                        Level.SEVERE,
+                        LocalDateTime.now() + ": Could not load users from database ");
+            }
         }
+
 
         launch();
     }
