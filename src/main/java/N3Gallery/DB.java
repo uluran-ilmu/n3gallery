@@ -26,7 +26,9 @@ public class DB {
 
   public static void connect() {
     try {
+      System.out.println(DATABASE_URL);
       connection = DriverManager.getConnection(DATABASE_URL);
+      Logger.getAnonymousLogger().log(Level.INFO, LocalDateTime.now() + ": Connection established");
     } catch (SQLException exception) {
       Logger.getAnonymousLogger().log(Level.SEVERE,
           LocalDateTime.now() + ": Could not connect to SQLite DB");

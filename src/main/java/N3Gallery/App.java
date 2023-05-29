@@ -3,51 +3,113 @@
  */
 package N3Gallery;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import N3Gallery.dao.UserDao;
+import N3Gallery.model.User;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+// UI Utils Class
+
+class InputGroup {
+    public static VBox group(Label label, TextField textField, double spacing) {
+        VBox container = new VBox();
+        container.getChildren().addAll(label, textField);
+        container.setSpacing(spacing);
+        container.setMaxWidth(240.0);
+
+        return container;
+    }
+}
+
+class RegisterScene {
+    private Scene scene = null;
+    private UserDao userDao;
+
+    public RegisterScene(Stage primaryStage) {
+        this.userDao = new UserDao();
+        VBox container = new VBox();
+
+        Label nameLabel = new Label("Full name");
+        TextField nameTf = new TextField();
+        nameTf.setPromptText("Full name");
+        
+        Label emailLabel = new Label("Email");
+        TextField emailTf = new TextField();
+        emailTf.setPromptText("name@email.com");
+        
+        Label passwordLabel = new Label("Password");
+        PasswordField passwordTf = new PasswordField();
+        passwordTf.setPromptText("password");
+
+        container.setSpacing(12.0);
+        container.setAlignment(Pos.CENTER);
+
+        Alert registrationAlert = new Alert(AlertType.NONE);
+        
+        Button registerButton = new Button("Register");
+        registerButton.setMaxWidth(240.0);
+
+        container.getChildren().addAll(
+            InputGroup.group(nameLabel, nameTf, 4.0),
+            InputGroup.group(emailLabel, emailTf, 4.0),
+            InputGroup.group(passwordLabel, passwordTf, 4.0),
+            registerButton
+        );
+
+        this.scene = new Scene(container, 600, 480);
+
+        primaryStage.setTitle("Register");
+        primaryStage.setScene(this.scene);
+
+        registerButton.setOnAction(action -> {
+            try {
+                User user = new User(nameTf.getText(), emailTf.getText(), passwordTf.getText());
+
+                if (userDao.getUserByEmail(emailTf.getText()) != null) {
+                    registrationAlert.setAlertType(AlertType.ERROR);
+                    registrationAlert.setContentText("Email is registered before. Please proceed to login using that email!");
+                    registrationAlert.show();
+                    return;
+                }
+
+                userDao.create(user);
+                
+                registrationAlert.setAlertType(AlertType.INFORMATION);
+                registrationAlert.setContentText("Your account has been register successfully. Please proceed to login");
+                registrationAlert.show();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                registrationAlert.setContentText("Something wrong when register, please try again!");
+                registrationAlert.show();
+            }
+        });
+    }
+
+    public Scene getScene() {
+        return this.scene;
+    }
+}
+
 public class App extends Application {
+
+    public App() {
+        DB.connect();
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        VBox vBox = new VBox(new Label("Hello World!"));
-        vBox.setAlignment(Pos.CENTER);
-        primaryStage.setScene(new Scene(vBox, 600, 480));
-        primaryStage.setTitle("Main");
+        new RegisterScene(primaryStage).getScene();
         primaryStage.show();
     }
 
     public static void main(String[] args) {
-        System.out.println(DB.checkDBDriver());
-        DB.connect();
-
-        if (DB.getConnection() != null) {
-            System.out.println("Connection established to SQLite DB");
-
-            try {
-                PreparedStatement statement = DB.getConnection().prepareStatement("SELECT * FROM users");
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    System.out.println(rs.getString("name"));
-                }
-            } catch (SQLException e) {
-                Logger.getAnonymousLogger().log(
-                        Level.SEVERE,
-                        LocalDateTime.now() + ": Could not load users from database.");
-            }
-        }
-
         launch();
     }
 }
