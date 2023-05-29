@@ -3,8 +3,6 @@
  */
 package N3Gallery;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,59 +28,25 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    private static boolean checkSQLiteDriver() {
-        try {
-            Class.forName("org.sqlite.JDBC");
-            DriverManager.registerDriver(new org.sqlite.JDBC());
-            return true;
-        } catch (ClassNotFoundException | SQLException classNotFoundException) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not start SQLite Drivers");
-            return false;
-        }
-    }
-
-    private static Connection createConnection() {
-        Connection connection = null;
-
-        try {
-            connection = DriverManager
-                    .getConnection("jdbc:sqlite:" + App.class.getResource("/database/database.db").toExternalForm());
-        } catch (SQLException exception) {
-            Logger.getAnonymousLogger().log(Level.SEVERE,
-                    LocalDateTime.now() + ": Could not connect to SQLite DB");
-        } finally {
-            if (connection != null) {
-                return connection;
-            }
-        }
-        return null;
-    }
-
     public static void main(String[] args) {
-        System.out.println(checkSQLiteDriver());
+        System.out.println(DB.checkDBDriver());
+        DB.connect();
 
-        Connection connection = createConnection();
-
-        if (connection != null) {
+        if (DB.getConnection() != null) {
             System.out.println("Connection established to SQLite DB");
 
             try {
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM users");
+                PreparedStatement statement = DB.getConnection().prepareStatement("SELECT * FROM users");
                 ResultSet rs = statement.executeQuery();
-                if (!rs.next()) {
-                    System.out.println("No data exist!");
-                }
-                
                 while (rs.next()) {
                     System.out.println(rs.getString("name"));
                 }
             } catch (SQLException e) {
                 Logger.getAnonymousLogger().log(
                         Level.SEVERE,
-                        LocalDateTime.now() + ": Could not load users from database ");
+                        LocalDateTime.now() + ": Could not load users from database.");
             }
         }
-
 
         launch();
     }
