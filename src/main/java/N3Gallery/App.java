@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import N3Gallery.dao.UserDao;
 import N3Gallery.model.User;
+import N3Gallery.utils.Password;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -28,22 +29,102 @@ class InputGroup {
     }
 }
 
+class LoginScene {
+    private Scene scene = null;
+    private Stage primaryStage;
+    private UserDao userDao;
+
+    public LoginScene(Stage primaryStage) {
+        this.userDao = new UserDao();
+        this.primaryStage = primaryStage;
+        VBox container = new VBox();
+
+        Label emailLabel = new Label("Email");
+        TextField emailTf = new TextField();
+        emailTf.setPromptText("name@email.com");
+
+        Label passwordLabel = new Label("Password");
+        PasswordField passwordTf = new PasswordField();
+        passwordTf.setPromptText("password");
+
+        container.setSpacing(12.0);
+        container.setAlignment(Pos.CENTER);
+
+        Alert loginAlert = new Alert(AlertType.NONE);
+
+        Button loginButton = new Button("Login");
+        loginButton.setMaxWidth(240.0);
+
+        Button navToRegisterSceneButton = new Button("Don't have account? Create one!");
+        navToRegisterSceneButton.setMaxWidth(240.0);
+
+        container.getChildren().addAll(
+                InputGroup.group(emailLabel, emailTf, 4.0),
+                InputGroup.group(passwordLabel, passwordTf, 4.0),
+                loginButton,
+                navToRegisterSceneButton);
+
+        this.scene = new Scene(container, 600, 480);
+
+        loginButton.setOnAction(action -> {
+            try {
+                User user = userDao.getUserByEmail(emailTf.getText());
+                if (user == null) {
+                    loginAlert.setAlertType(AlertType.ERROR);
+                    loginAlert.setContentText("Email is not registered, please proceed to register if you want to!");
+                    loginAlert.show();
+                    return;
+                }
+
+                if (!Password.equals(passwordTf.getText(), user.getPassword())) {
+                    loginAlert.setAlertType(AlertType.ERROR);
+                    loginAlert.setContentText("Wrong credentials, please try again!");
+                    loginAlert.show();
+                    return;
+                } 
+                
+                loginAlert.setAlertType(AlertType.INFORMATION);
+                loginAlert.setContentText("Login successful!");
+                loginAlert.show();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        navToRegisterSceneButton.setOnAction(action -> {
+            openRegisterScene();
+        });
+    }
+
+    public void openRegisterScene() {
+        this.primaryStage.setTitle("Register");
+        this.primaryStage.setScene(new RegisterScene(this.primaryStage).getScene());
+    }
+
+    public Scene getScene() {
+        return this.scene;
+    }
+}
+
 class RegisterScene {
     private Scene scene = null;
+    private Stage primaryStage = null;
     private UserDao userDao;
 
     public RegisterScene(Stage primaryStage) {
+        this.primaryStage = primaryStage;
         this.userDao = new UserDao();
         VBox container = new VBox();
 
         Label nameLabel = new Label("Full name");
         TextField nameTf = new TextField();
         nameTf.setPromptText("Full name");
-        
+
         Label emailLabel = new Label("Email");
         TextField emailTf = new TextField();
         emailTf.setPromptText("name@email.com");
-        
+
         Label passwordLabel = new Label("Password");
         PasswordField passwordTf = new PasswordField();
         passwordTf.setPromptText("password");
@@ -52,44 +133,57 @@ class RegisterScene {
         container.setAlignment(Pos.CENTER);
 
         Alert registrationAlert = new Alert(AlertType.NONE);
-        
+
         Button registerButton = new Button("Register");
         registerButton.setMaxWidth(240.0);
 
+        Button navToLoginSceneButton = new Button("Already have account? Login!");
+        navToLoginSceneButton.setMaxWidth(240.0);
+
         container.getChildren().addAll(
-            InputGroup.group(nameLabel, nameTf, 4.0),
-            InputGroup.group(emailLabel, emailTf, 4.0),
-            InputGroup.group(passwordLabel, passwordTf, 4.0),
-            registerButton
-        );
+                InputGroup.group(nameLabel, nameTf, 4.0),
+                InputGroup.group(emailLabel, emailTf, 4.0),
+                InputGroup.group(passwordLabel, passwordTf, 4.0),
+                registerButton,
+                navToLoginSceneButton);
 
         this.scene = new Scene(container, 600, 480);
 
-        primaryStage.setTitle("Register");
-        primaryStage.setScene(this.scene);
-
         registerButton.setOnAction(action -> {
             try {
-                User user = new User(nameTf.getText(), emailTf.getText(), passwordTf.getText());
+                User user = new User(nameTf.getText(), emailTf.getText(), Password.hash(passwordTf.getText()));
 
                 if (userDao.getUserByEmail(emailTf.getText()) != null) {
                     registrationAlert.setAlertType(AlertType.ERROR);
-                    registrationAlert.setContentText("Email is registered before. Please proceed to login using that email!");
+                    registrationAlert
+                            .setContentText("Email is registered before. Please proceed to login using that email!");
                     registrationAlert.show();
                     return;
                 }
 
                 userDao.create(user);
-                
+
                 registrationAlert.setAlertType(AlertType.INFORMATION);
-                registrationAlert.setContentText("Your account has been register successfully. Please proceed to login");
+                registrationAlert
+                        .setContentText("Your account has been register successfully. Please proceed to login");
                 registrationAlert.show();
+
+                openLoginScene();
             } catch (SQLException e) {
                 e.printStackTrace();
                 registrationAlert.setContentText("Something wrong when register, please try again!");
                 registrationAlert.show();
             }
         });
+
+        navToLoginSceneButton.setOnAction(action -> {
+            openLoginScene();
+        });
+    }
+
+    private void openLoginScene() {
+        this.primaryStage.setTitle("Login");
+        this.primaryStage.setScene(new LoginScene(primaryStage).getScene());
     }
 
     public Scene getScene() {
@@ -105,7 +199,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        new RegisterScene(primaryStage).getScene();
+        primaryStage.setScene(new LoginScene(primaryStage).getScene());
+        primaryStage.setTitle("Login");
         primaryStage.show();
     }
 
