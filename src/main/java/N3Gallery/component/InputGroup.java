@@ -4,13 +4,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
-public class InputGroup {
-  public static VBox group(Label label, TextField textField, double spacing) {
-      VBox container = new VBox();
-      container.getChildren().addAll(label, textField);
-      container.setSpacing(spacing);
-      container.setMaxWidth(240.0);
-
-      return container;
+public class InputGroup extends VBox {
+  public InputGroup(Label label, TextField textField, double spacing) {
+    this.getChildren().addAll(label, textField);
+    this.setSpacing(spacing);
+    this.setMaxWidth(240.0);
   }
 }

@@ -47,8 +47,8 @@ public class LoginScene {
     navToRegisterSceneButton.setMaxWidth(240.0);
 
     container.getChildren().addAll(
-        InputGroup.group(emailLabel, emailTf, 4.0),
-        InputGroup.group(passwordLabel, passwordTf, 4.0),
+        new InputGroup(emailLabel, emailTf, 4.0),
+        new InputGroup(passwordLabel, passwordTf, 4.0),
         loginButton,
         navToRegisterSceneButton);
 

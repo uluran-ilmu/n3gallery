@@ -17,87 +17,86 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
 public class RegisterScene {
   private Scene scene = null;
   private Stage primaryStage = null;
   private UserDao userDao;
 
   public RegisterScene(Stage primaryStage) {
-      this.primaryStage = primaryStage;
-      this.userDao = new UserDao();
-      VBox container = new VBox();
+    this.primaryStage = primaryStage;
+    this.userDao = new UserDao();
+    VBox container = new VBox();
 
-      Label nameLabel = new Label("Full name");
-      TextField nameTf = new TextField();
-      nameTf.setPromptText("Full name");
+    Label nameLabel = new Label("Full name");
+    TextField nameTf = new TextField();
+    nameTf.setPromptText("Full name");
 
-      Label emailLabel = new Label("Email");
-      TextField emailTf = new TextField();
-      emailTf.setPromptText("name@email.com");
+    Label emailLabel = new Label("Email");
+    TextField emailTf = new TextField();
+    emailTf.setPromptText("name@email.com");
 
-      Label passwordLabel = new Label("Password");
-      PasswordField passwordTf = new PasswordField();
-      passwordTf.setPromptText("password");
+    Label passwordLabel = new Label("Password");
+    PasswordField passwordTf = new PasswordField();
+    passwordTf.setPromptText("password");
 
-      container.setSpacing(12.0);
-      container.setAlignment(Pos.CENTER);
+    container.setSpacing(12.0);
+    container.setAlignment(Pos.CENTER);
 
-      Alert registrationAlert = new Alert(AlertType.NONE);
+    Alert registrationAlert = new Alert(AlertType.NONE);
 
-      Button registerButton = new Button("Register");
-      registerButton.setMaxWidth(240.0);
+    Button registerButton = new Button("Register");
+    registerButton.setMaxWidth(240.0);
 
-      Button navToLoginSceneButton = new Button("Already have account? Login!");
-      navToLoginSceneButton.setMaxWidth(240.0);
+    Button navToLoginSceneButton = new Button("Already have account? Login!");
+    navToLoginSceneButton.setMaxWidth(240.0);
 
-      container.getChildren().addAll(
-              InputGroup.group(nameLabel, nameTf, 4.0),
-              InputGroup.group(emailLabel, emailTf, 4.0),
-              InputGroup.group(passwordLabel, passwordTf, 4.0),
-              registerButton,
-              navToLoginSceneButton);
+    container.getChildren().addAll(
+        new InputGroup(nameLabel, nameTf, 4.0),
+        new InputGroup(emailLabel, emailTf, 4.0),
+        new InputGroup(passwordLabel, passwordTf, 4.0),
+        registerButton,
+        navToLoginSceneButton);
 
-      this.scene = new Scene(container, 600, 480);
+    this.scene = new Scene(container, 600, 480);
 
-      registerButton.setOnAction(action -> {
-          try {
-              User user = new User(nameTf.getText(), emailTf.getText(), Password.hash(passwordTf.getText()));
+    registerButton.setOnAction(action -> {
+      try {
+        User user = new User(nameTf.getText(), emailTf.getText(), Password.hash(passwordTf.getText()));
 
-              if (userDao.getUserByEmail(emailTf.getText()) != null) {
-                  registrationAlert.setAlertType(AlertType.ERROR);
-                  registrationAlert
-                          .setContentText("Email is registered before. Please proceed to login using that email!");
-                  registrationAlert.show();
-                  return;
-              }
+        if (userDao.getUserByEmail(emailTf.getText()) != null) {
+          registrationAlert.setAlertType(AlertType.ERROR);
+          registrationAlert
+              .setContentText("Email is registered before. Please proceed to login using that email!");
+          registrationAlert.show();
+          return;
+        }
 
-              userDao.create(user);
+        userDao.create(user);
 
-              registrationAlert.setAlertType(AlertType.INFORMATION);
-              registrationAlert
-                      .setContentText("Your account has been register successfully. Please proceed to login");
-              registrationAlert.show();
+        registrationAlert.setAlertType(AlertType.INFORMATION);
+        registrationAlert
+            .setContentText("Your account has been register successfully. Please proceed to login");
+        registrationAlert.show();
 
-              openLoginScene();
-          } catch (SQLException e) {
-              e.printStackTrace();
-              registrationAlert.setContentText("Something wrong when register, please try again!");
-              registrationAlert.show();
-          }
-      });
+        openLoginScene();
+      } catch (SQLException e) {
+        e.printStackTrace();
+        registrationAlert.setContentText("Something wrong when register, please try again!");
+        registrationAlert.show();
+      }
+    });
 
-      navToLoginSceneButton.setOnAction(action -> {
-          openLoginScene();
-      });
+    navToLoginSceneButton.setOnAction(action -> {
+      openLoginScene();
+    });
   }
 
   private void openLoginScene() {
-      this.primaryStage.setTitle("Login");
-      this.primaryStage.setScene(new LoginScene(primaryStage).getScene());
+    this.primaryStage.setTitle("Login");
+    this.primaryStage.setScene(new LoginScene(primaryStage).getScene());
   }
 
   public Scene getScene() {
-      return this.scene;
+    return this.scene;
   }
 }
