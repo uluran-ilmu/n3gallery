@@ -3,9 +3,7 @@
  */
 package N3Gallery;
 
-import N3Gallery.dao.ProductDao;
 import N3Gallery.utils.Seeder;
-import N3Gallery.view.HomeScene;
 import N3Gallery.view.LoginScene;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -18,10 +16,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println(new ProductDao().getProducts().size());
-        primaryStage.setScene(new HomeScene(primaryStage).getScene());
-        primaryStage.setTitle("Home");
-        primaryStage.setResizable(false);
+        primaryStage.setScene(new LoginScene(primaryStage).getScene());
+        primaryStage.setTitle("Login");
         primaryStage.show();
     }
 

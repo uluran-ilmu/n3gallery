@@ -1,12 +1,12 @@
 package N3Gallery.component;
 
 import N3Gallery.model.Product;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
@@ -14,13 +14,14 @@ public class ProductCard extends Pane {
   public ProductCard(Product product) {
     setMaxWidth(200.0);
     setPrefWidth(200.0);
-    setMaxHeight(260.0);
-    setPrefHeight(260.0);
+    setMaxHeight(280.0);
+    setPrefHeight(280.0);
     setStyle("-fx-background-color: #FFF; -fx-border-radius: 8px; -fx-background-radius: 8px;");
 
     DropShadow dropShadow = new DropShadow();
-    dropShadow.setHeight(2.0);
-    dropShadow.setWidth(2.0);
+    dropShadow.setHeight(8.0);
+    dropShadow.setWidth(8.0);
+    dropShadow.setColor(Color.GREY);
     dropShadow.setBlurType(BlurType.GAUSSIAN);
 
     setEffect(dropShadow);

@@ -1,7 +1,9 @@
 package N3Gallery.view;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
+import N3Gallery.LoggedInUser;
 import N3Gallery.component.InputGroup;
 import N3Gallery.dao.UserDao;
 import N3Gallery.model.User;
@@ -10,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -73,9 +76,14 @@ public class LoginScene {
 
         loginAlert.setAlertType(AlertType.INFORMATION);
         loginAlert.setContentText("Login successful!");
-        loginAlert.show();
 
-        openHomeScene();
+        LoggedInUser.getInstance().set(user);
+
+        Optional<ButtonType> result = loginAlert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+          openHomeScene();
+        }
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -93,8 +101,8 @@ public class LoginScene {
   }
 
   public void openHomeScene() {
-    this.primaryStage.setTitle("Home");
-    this.primaryStage.setScene(new HomeScene(primaryStage).getScene());
+    this.primaryStage.setTitle("Home [ User: " + LoggedInUser.getInstance().get().getName() + " ]");
+    this.primaryStage.setScene(new HomeScene(this.primaryStage).getScene());
   }
 
   public Scene getScene() {
