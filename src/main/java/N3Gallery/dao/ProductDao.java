@@ -7,14 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import N3Gallery.DB;
-import N3Gallery.model.Brand;
 import N3Gallery.model.Product;
 
 public class ProductDao {
   private Connection connection;
+  private BrandDao brandDao;
 
   public ProductDao() {
     connection = DB.getConnection();
+    brandDao = new BrandDao();
   }
 
   public ArrayList<Product> getProducts() throws SQLException {
@@ -31,7 +32,7 @@ public class ProductDao {
             rs.getString("id"),
             rs.getString("name"),
             rs.getInt("isAvailable") == 1,
-            new Brand(""),
+            brandDao.getBrand(rs.getString("brandId")),
             rs.getString("imageLink"),
             Double.valueOf(rs.getString("price")),
             rs.getString("createdAt"),

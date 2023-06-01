@@ -28,7 +28,7 @@ public class HomeScene {
     GridPane container = new GridPane();
     container.setAlignment(Pos.TOP_CENTER);
     container.setHgap(12.0);
-    container.setVgap(12.0);
+    container.setVgap(24.0);
     container.setPadding(new Insets(24));
 
     scrollable.setContent(container);

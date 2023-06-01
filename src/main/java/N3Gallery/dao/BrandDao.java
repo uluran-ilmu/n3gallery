@@ -2,6 +2,7 @@ package N3Gallery.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import N3Gallery.DB;
@@ -12,6 +13,32 @@ public class BrandDao {
 
   public BrandDao() {
     connection = DB.getConnection();
+  }
+
+  public Brand getBrand(String id) throws SQLException {
+    try {
+      PreparedStatement statement = connection.prepareStatement(
+          "SELECT * FROM brands WHERE id=?");
+
+      statement.setString(1, id);
+
+      ResultSet rs = statement.executeQuery();
+
+      Brand brand = null;
+
+      while (rs.next()) {
+        brand = new Brand(
+            rs.getString("id"),
+            rs.getString("name"),
+            rs.getString("createdAt"),
+            rs.getString("updatedAt"));
+      }
+
+      return brand;
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public int create(Brand brand) throws SQLException {
