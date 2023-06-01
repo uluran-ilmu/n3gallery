@@ -32,8 +32,8 @@ public class ProductCard extends Pane {
     image.setLayoutX(10.0);
     image.setLayoutY(10.0);
     image.setStyle("-fx-border-radius: 8px; -fx-background-radius: 8px;");
-
-    Label name = new Label("[" + product.getBrand().getName() + "] " + product.getName());
+    
+    Label name = new Label(String.format("[%s] %s", product.getBrand().getName(), product.getName()));
     name.setFont(Font.font(12.0));
     name.setTextAlignment(TextAlignment.CENTER);
     name.setWrapText(true);
