@@ -74,6 +74,8 @@ public class LoginScene {
         loginAlert.setAlertType(AlertType.INFORMATION);
         loginAlert.setContentText("Login successful!");
         loginAlert.show();
+
+        openHomeScene();
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -88,6 +90,11 @@ public class LoginScene {
   public void openRegisterScene() {
     this.primaryStage.setTitle("Register");
     this.primaryStage.setScene(new RegisterScene(this.primaryStage).getScene());
+  }
+
+  public void openHomeScene() {
+    this.primaryStage.setTitle("Home");
+    this.primaryStage.setScene(new HomeScene(primaryStage).getScene());
   }
 
   public Scene getScene() {

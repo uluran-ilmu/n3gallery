@@ -40,6 +40,20 @@ public class Seeder {
   private void seedProducts() {
     products.add(new Product("Samsung Galaxy Z Fold4 12/256GB - Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/g/a/galaxy_z_fold4_phantom_black_1.jpg", 22499000));
     products.add(new Product("Samsung Galaxy Z Fold3 5G 12/256GB - Phantom Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/s/a/samsung-galaxy-fold3-black-new-1_1_1.jpg", 19999000));
+    products.add(new Product("Samsung Galaxy Z Fold4 12/256GB - Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/g/a/galaxy_z_fold4_phantom_black_1.jpg", 22499000));
+    products.add(new Product("Samsung Galaxy Z Fold3 5G 12/256GB - Phantom Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/s/a/samsung-galaxy-fold3-black-new-1_1_1.jpg", 19999000));
+    products.add(new Product("Samsung Galaxy Z Fold4 12/256GB - Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/g/a/galaxy_z_fold4_phantom_black_1.jpg", 22499000));
+    products.add(new Product("Samsung Galaxy Z Fold3 5G 12/256GB - Phantom Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/s/a/samsung-galaxy-fold3-black-new-1_1_1.jpg", 19999000));
+    products.add(new Product("Samsung Galaxy Z Fold4 12/256GB - Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/g/a/galaxy_z_fold4_phantom_black_1.jpg", 22499000));
+    products.add(new Product("Samsung Galaxy Z Fold3 5G 12/256GB - Phantom Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/s/a/samsung-galaxy-fold3-black-new-1_1_1.jpg", 19999000));
+    products.add(new Product("Samsung Galaxy Z Fold4 12/256GB - Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/g/a/galaxy_z_fold4_phantom_black_1.jpg", 22499000));
+    products.add(new Product("Samsung Galaxy Z Fold3 5G 12/256GB - Phantom Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/s/a/samsung-galaxy-fold3-black-new-1_1_1.jpg", 19999000));
+    products.add(new Product("Samsung Galaxy Z Fold4 12/256GB - Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/g/a/galaxy_z_fold4_phantom_black_1.jpg", 22499000));
+    products.add(new Product("Samsung Galaxy Z Fold3 5G 12/256GB - Phantom Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/s/a/samsung-galaxy-fold3-black-new-1_1_1.jpg", 19999000));
+    products.add(new Product("Samsung Galaxy Z Fold4 12/256GB - Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/g/a/galaxy_z_fold4_phantom_black_1.jpg", 22499000));
+    products.add(new Product("Samsung Galaxy Z Fold3 5G 12/256GB - Phantom Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/s/a/samsung-galaxy-fold3-black-new-1_1_1.jpg", 19999000));
+    products.add(new Product("Samsung Galaxy Z Fold4 12/256GB - Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/g/a/galaxy_z_fold4_phantom_black_1.jpg", 22499000));
+    products.add(new Product("Samsung Galaxy Z Fold3 5G 12/256GB - Phantom Black", true, brands.get(0), "https://cdn.eraspace.com/media/catalog/product/s/a/samsung-galaxy-fold3-black-new-1_1_1.jpg", 19999000));
     
     products.forEach(product -> {
       try {
