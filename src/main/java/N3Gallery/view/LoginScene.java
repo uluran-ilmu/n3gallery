@@ -82,6 +82,7 @@ public class LoginScene {
         Optional<ButtonType> result = loginAlert.showAndWait();
 
         if (result.get() == ButtonType.OK) {
+          loginAlert.close();
           openHomeScene();
         }
       } catch (SQLException e) {
@@ -98,11 +99,13 @@ public class LoginScene {
   public void openRegisterScene() {
     this.primaryStage.setTitle("Register");
     this.primaryStage.setScene(new RegisterScene(this.primaryStage).getScene());
+    this.primaryStage.setResizable(false);
   }
 
   public void openHomeScene() {
-    this.primaryStage.setTitle("Home [ User: " + LoggedInUser.getInstance().get().getName() + " ]");
+    this.primaryStage.setTitle(String.format("Home [ User: %s ]", LoggedInUser.getInstance().get().getName()));
     this.primaryStage.setScene(new HomeScene(this.primaryStage).getScene());
+    this.primaryStage.setResizable(false);
   }
 
   public Scene getScene() {

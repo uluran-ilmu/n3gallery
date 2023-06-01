@@ -1,6 +1,5 @@
 package N3Gallery.view;
 
-import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -39,12 +38,23 @@ public class HomeScene {
     try {
       ArrayList<Product> products = productDao.getProducts();
       for (int i = 0; i < products.size(); i++) {
-        container.add(new ProductCard(products.get(i)), i % 4, i / 4);
+        Product product = products.get(i);
+        ProductCard productCard = new ProductCard(product);
+        productCard.setOnMouseClicked(action -> {
+          openPreorderScene(product);
+        });
+
+        container.add(productCard, i % 4, i / 4);
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
+  }
 
+  private void openPreorderScene(Product product) {
+    this.primaryStage.setScene(new PreorderScene(this.primaryStage, product).getScene());
+    this.primaryStage.setTitle(String.format("Product Preorder [ %s - %s ]", product.getBrand().getName(), product.getName()));
+    this.primaryStage.setResizable(false);
   }
 
   public Scene getScene() {

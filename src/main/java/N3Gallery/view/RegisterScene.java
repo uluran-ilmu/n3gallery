@@ -94,6 +94,7 @@ public class RegisterScene {
   private void openLoginScene() {
     this.primaryStage.setTitle("Login");
     this.primaryStage.setScene(new LoginScene(primaryStage).getScene());
+    this.primaryStage.setResizable(false);
   }
 
   public Scene getScene() {
