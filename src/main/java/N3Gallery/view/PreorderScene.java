@@ -1,7 +1,12 @@
 package N3Gallery.view;
 
+import java.sql.SQLException;
+import java.util.Optional;
+
 import N3Gallery.LoggedInUser;
 import N3Gallery.component.InputGroup;
+import N3Gallery.dao.PreorderDao;
+import N3Gallery.model.Preorder;
 import N3Gallery.model.Product;
 import N3Gallery.utils.Formatter;
 import javafx.geometry.Insets;
@@ -9,6 +14,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -27,10 +33,12 @@ public class PreorderScene {
   private Scene scene = null;
   private Stage primaryStage = null;
   private Product product = null;
+  private PreorderDao preorderDao = null;
 
   public PreorderScene(Stage primaryStage, Product product) {
     this.primaryStage = primaryStage;
     this.product = product;
+    this.preorderDao = new PreorderDao();
 
     VBox bodyContainer = new VBox();
     bodyContainer.setSpacing(60.0);
@@ -131,7 +139,32 @@ public class PreorderScene {
         preorderButton);
 
     container.setPrefWidth(270.0);
-    
+
+    Alert preorderAlert = new Alert(AlertType.NONE);
+
+    preorderButton.setOnAction(action -> {
+      try {
+        preorderAlert.setAlertType(AlertType.CONFIRMATION);
+        Optional<ButtonType> result = preorderAlert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+          this.preorderDao.create(
+              new Preorder(
+                  this.product,
+                  LoggedInUser.getInstance().get(),
+                  phoneNumberTf.getText(),
+                  provinceTf.getText(),
+                  cityTf.getText(),
+                  addressTa.getText()));
+
+          openHomeScene();
+        }
+
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
+
     return container;
   }
 
